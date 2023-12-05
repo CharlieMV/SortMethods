@@ -51,9 +51,10 @@ public class SortMethods {
 	 */
 	public void insertionSort(Integer [] arr) {
 		for (int outer = 1; outer < arr.length; outer ++) {
-			for (int inner = outer; inner > 0; inner --) {
-				if (arr[inner].compareTo(arr[inner - 1]) < 0)
-					swap(arr, inner, inner - 1);
+			int inner = outer - 1;
+			while (inner >= 0 && arr[inner + 1].compareTo(arr[inner]) < 0) {
+				swap(arr, inner, inner + 1);
+				inner --;
 			}
 		}
 	}
@@ -62,7 +63,49 @@ public class SortMethods {
 	 *	Merge Sort algorithm - in ascending order (you implement)
 	 *	@param arr		array of Integer objects to sort
 	 */
-	public void mergeSort(Integer [] arr) {}
+	public void mergeSort(Integer [] arr) {
+		arr = mergeSplit(0, arr.length - 1, arr);
+	}
+	
+	/**
+	 *  Split helper method for merge. If end - start indices = 1 or 2,
+	 * 	break the loop.
+	 * 	@param	int		start index
+	 * 	@param	int		end index
+	 * 	@param	Integer[]	array to split
+	 * 	@return Integer[]	merged array
+	 */
+	public Integer[] mergeSplit(int start, int end, Integer[] arr) {
+		// Find middle to split
+		int splitIndex = (start + end) / 2;
+		// Array for each half
+		Integer[] firstHalf;
+		Integer[] secondHalf;
+		// First half
+		if (splitIndex - start > 1) {
+			firstHalf = mergeSplit(start, splitIndex, arr);
+		} else if (splitIndex == start) {
+			firstHalf = new Integer[] {arr[start]};
+		} else {
+			// Swap if needed
+			if (arr[start].compareTo(arr[start + 1]) > 0)
+				swap(arr, start, start + 1);
+			firstHalf = new Integer[] {arr[start], arr[start + 1]};
+		}
+		// Second half
+		if (end - (splitIndex + 1) > 1) {
+			secondHalf = mergeSplit(splitIndex + 1, end, arr);
+		} else if (splitIndex + 1 == end) {
+			secondHalf = new Integer[] {arr[end]};
+		} else {
+			if (arr[splitIndex + 1].compareTo(arr[splitIndex + 2]) > 0)
+				swap(arr, splitIndex + 1, splitIndex + 2);
+			secondHalf = new Integer[] {arr[end  - 1], arr[end]};
+		}
+		// Output Array
+		Integer[] output = new Integer[firstHalf.length + secondHalf.length];
+		return output;
+	}
 	
 	/*****************************************************************/
 	/************************* For Testing ***************************/
@@ -124,7 +167,7 @@ public class SortMethods {
 		printArray(arr);
 		System.out.println();
 
-/*		
+
 		for (int a = 0; a < 10; a++)
 			arr[a] = (int)(Math.random() * 100) + 1;
 		System.out.println("\nMerge Sort");
@@ -135,6 +178,6 @@ public class SortMethods {
 		System.out.println("Array after sort:");
 		printArray(arr);
 		System.out.println();
-*/
+
 	}
 }
