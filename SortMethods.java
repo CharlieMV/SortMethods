@@ -64,7 +64,10 @@ public class SortMethods {
 	 *	@param arr		array of Integer objects to sort
 	 */
 	public void mergeSort(Integer [] arr) {
-		arr = mergeSplit(0, arr.length - 1, arr);
+		Integer[] temp = (mergeSplit(0, arr.length - 1, arr));
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = temp[i];
+		}
 	}
 	
 	/**
@@ -75,7 +78,7 @@ public class SortMethods {
 	 * 	@param	Integer[]	array to split
 	 * 	@return Integer[]	merged array
 	 */
-	public Integer[] mergeSplit(int start, int end, Integer[] arr) {
+	private Integer[] mergeSplit(int start, int end, Integer[] arr) {
 		// Find middle to split
 		int splitIndex = (start + end) / 2;
 		// Array for each half
@@ -103,7 +106,49 @@ public class SortMethods {
 			secondHalf = new Integer[] {arr[end  - 1], arr[end]};
 		}
 		// Output Array
-		Integer[] output = new Integer[firstHalf.length + secondHalf.length];
+		// Integer[] output = new Integer[firstHalf.length + secondHalf.length];
+		return merge(firstHalf, secondHalf);
+	}
+	
+	/**
+	 * 	Sort two sorted arrays into one
+	 * 	@param	Integer[]	array to sort and merge
+	 * 	@param	Integer[]	array to sort and merge
+	 * 	@return Integer[]	sorted array
+	 */
+	private Integer[] merge(Integer[] arr1, Integer[] arr2) {
+		// Array to output
+		Integer[] output = new Integer[arr1.length + arr2.length];
+		// Index of arrays
+		int index1 = 0;
+		int index2 = 0;
+		boolean finished = false;
+		while(!finished) {
+			// Add lowest to output
+			if (arr1[index1] > arr2[index2]) {
+				output[index1 + index2] = arr2[index2];
+				index2 ++;
+			} else {
+				output[index1 + index2] = arr1[index1];	
+				index1++;
+			}
+			/* If index reaches end of an array, copy the rest of the
+			 * other array to output */
+			if (index1 > arr1.length - 1) {
+				while (index2 < arr2.length) {
+					output[index1 + index2] = arr2[index2];
+					index2++;
+				}
+				finished = true;
+			}
+			if (index2 > arr2.length - 1) {
+				while (index1 < arr1.length) {
+					output[index1 + index2] = arr1[index1];
+					index1++;
+				}
+				finished = true;
+			}
+		}
 		return output;
 	}
 	
